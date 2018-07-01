@@ -4,6 +4,7 @@ import './App.css'
 import SearchBooks from './SearchBooks'
 import BookShelf from './BookShelf'
 import { Route } from 'react-router-dom'
+import escapeRegExp from 'escape-string-regexp'
 
 
 class BooksApp extends React.Component {
@@ -15,8 +16,19 @@ class BooksApp extends React.Component {
     BooksAPI.getAll().then((books) => {
       this.setState({books})
       console.log(books)
-      console.log(books[0].shelf)
+      //this.filterShelf('wantToRead')
     })
+  }
+
+  filterShelf(shelf) {
+    // this.setState((state) => {
+    //   // books: state.books.filter(() => this.state.books.shelf === shelf)
+    //   console.log(state.books.filter((book) => book.shelf === shelf))
+    //   return state.books.filter((book) => book.shelf === shelf)
+    // })
+
+    return this.state.books.filter((book) => book.shelf === shelf)
+
   }
 
   render() {
@@ -24,15 +36,18 @@ class BooksApp extends React.Component {
       <div className="app">
         <Route path='/search' render={() => (
           <SearchBooks 
-            onCloseSearch={() => {
-              this.closeSearch()
-            }}
+            // onCloseSearch={() => {
+            //   this.closeSearch()
+            // }}
           />
         )}/>
         
         <Route exact path='/' render={() => (
           <BookShelf
             books={this.state.books}
+            getShelf={() => {
+              this.filterShelf()
+            }}
           />
         )}/>
       </div>
