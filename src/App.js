@@ -31,23 +31,34 @@ class BooksApp extends React.Component {
 
   }
 
+  changeShelf(selectedBook, selected) {
+    // this.setState((state) => ({
+    //   books: state.books.map((book) => {
+    //     if(book.id === selectedBook) {
+    //       book.shelf = selected
+    //     }
+    //     return book
+    //   })
+    // }))
+    console.log(this.state.books)
+  }
+
   render() {
     return (
       <div className="app">
         <Route path='/search' render={() => (
           <SearchBooks 
-            // onCloseSearch={() => {
-            //   this.closeSearch()
-            // }}
+
           />
         )}/>
         
         <Route exact path='/' render={() => (
           <BookShelf
             books={this.state.books}
-            getShelf={() => {
-              this.filterShelf()
-            }}
+            onChangeShelf={() => {this.changeShelf()}}
+            // getShelf={() => {
+            //   this.filterShelf()
+            // }}
           />
         )}/>
       </div>
