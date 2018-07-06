@@ -15,50 +15,40 @@ class BooksApp extends React.Component {
   componentDidMount() {
     BooksAPI.getAll().then((books) => {
       this.setState({books})
-      console.log(books)
-      //this.filterShelf('wantToRead')
     })
   }
 
-  filterShelf(shelf) {
-    // this.setState((state) => {
-    //   // books: state.books.filter(() => this.state.books.shelf === shelf)
-    //   console.log(state.books.filter((book) => book.shelf === shelf))
-    //   return state.books.filter((book) => book.shelf === shelf)
-    // })
-
-    return this.state.books.filter((book) => book.shelf === shelf)
-
-  }
-
-  changeShelf(selectedBook, selected) {
-    // this.setState((state) => ({
-    //   books: state.books.map((book) => {
-    //     if(book.id === selectedBook) {
-    //       book.shelf = selected
-    //     }
-    //     return book
-    //   })
-    // }))
-    console.log(this.state.books)
+  changeShelf(selectedBook, shelf) {
+    /* I'm getting a bunch of errors here
+      1. App.js:27 Uncaught TypeError: __WEBPACK_IMPORTED_MODULE_1__BooksAPI__.b(...).then(...).bind is not a function
+        This is after I add '.bind(this)' at the end of the promise
+      2. Uncaught (in promise) TypeError: _this3.setState is not a function
+        This is as it is without the bind
+    */
+    BooksAPI.update(selectedBook, shelf).then((response) => {
+      this.setState(state => ({
+        books: state.books.filter(b => b.id !== selectedBook.id).concat(selectedBook)
+      }))
+    })//.bind(this)
+    //console.log(this.state.books)
+    //this.componentDidMount()
   }
 
   render() {
     return (
       <div className="app">
-        <Route path='/search' render={() => (
-          <SearchBooks 
-
-          />
-        )}/>
-        
         <Route exact path='/' render={() => (
           <BookShelf
             books={this.state.books}
-            onChangeShelf={() => {this.changeShelf()}}
+            onChangeShelf={this.changeShelf}
             // getShelf={() => {
             //   this.filterShelf()
             // }}
+          />
+        )}/>
+        <Route path='/search' render={() => (
+          <SearchBooks 
+
           />
         )}/>
       </div>
