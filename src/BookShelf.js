@@ -1,35 +1,18 @@
 import React, { Component } from 'react'
 import {Link} from 'react-router-dom'
-import escapeRegExp from 'escape-string-regexp'
 
-// class BookChanger extends Component {
-
-//   // constructor(props) {
-//   //   super(props);
-//   //   this.handleChange = this.handleChange.bind(this);
-//   // }
-
-//   handleChange(e) {
-//     this.props.onChangeShelf(e.target.value);
-//   }
-
-//   render() {
-//     return (
-//         <div className="book-shelf-changer">
-//             <select>
-//               <option value="move" disabled>Move to...</option>
-//               <option value="currentlyReading">Currently Reading</option>
-//               <option value="wantToRead">Want to Read</option>
-//               <option value="read">Read</option>
-//               <option value="none">None</option>
-//             </select>
-//         </div>
-//     )
-//   }
-// }
 
 class Shelf extends Component {
 //I don't need state here. Probably
+
+  handleChange = (book, shelf) => {
+    //We don't want to call the parent function if the same shelf or none is clicked
+    if (book.shelf !== shelf && shelf !== 'none') {
+      this.props.handleChange(book, shelf)
+    } else {
+      console.log("Same shelf or none has been chosen")
+    }
+  }
 
   // let books = ''
   render() {
@@ -50,9 +33,9 @@ class Shelf extends Component {
                     backgroundImage: 'url(' + book.imageLinks.thumbnail + ')'}}></div>
                 <div className="book-shelf-changer">
                   <select
-                      value={this.props.shelf ?  this.props.shelf : 'none'}
-                      onChange={(event) => this.props.handleChange(book, event.target.value)}>
-                    <option value="move" disabled>Move to...</option>
+                      value={this.props.shelf}
+                      onChange={(event) => this.handleChange(book, event.target.value)}>
+                    <option value="move">Move to...</option>
                     <option value="currentlyReading">Currently Reading</option>
                     <option value="wantToRead">Want to Read</option>
                     <option value="read">Read</option>

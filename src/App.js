@@ -4,7 +4,6 @@ import './App.css'
 import SearchBooks from './SearchBooks'
 import BookShelf from './BookShelf'
 import { Route } from 'react-router-dom'
-import escapeRegExp from 'escape-string-regexp'
 
 
 class BooksApp extends React.Component {
@@ -18,20 +17,14 @@ class BooksApp extends React.Component {
     })
   }
 
-  changeShelf(selectedBook, shelf) {
-    /* I'm getting a bunch of errors here
-      1. App.js:27 Uncaught TypeError: __WEBPACK_IMPORTED_MODULE_1__BooksAPI__.b(...).then(...).bind is not a function
-        This is after I add '.bind(this)' at the end of the promise
-      2. Uncaught (in promise) TypeError: _this3.setState is not a function
-        This is as it is without the bind
-    */
+  changeShelf = (selectedBook, shelf) => {
     BooksAPI.update(selectedBook, shelf).then((response) => {
       this.setState(state => ({
-        books: state.books.filter(b => b.id !== selectedBook.id).concat(selectedBook)
+        books: state.books.filter(book => book.id !== selectedBook.id)
       }))
-    })//.bind(this)
+    })
     //console.log(this.state.books)
-    //this.componentDidMount()
+    this.componentDidMount()
   }
 
   render() {
@@ -48,7 +41,8 @@ class BooksApp extends React.Component {
         )}/>
         <Route path='/search' render={() => (
           <SearchBooks 
-
+            onChangeShelf={this.changeShelf}
+            books={this.state.books}
           />
         )}/>
       </div>
