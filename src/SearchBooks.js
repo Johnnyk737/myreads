@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import escapeRegExp from 'escape-string-regexp'
 import {Link} from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
 import sortBy from 'sort-by'
@@ -49,19 +48,28 @@ class SearchBooks extends Component {
   )
 
   updateQuery = (query) => {
-    //found out this works a lot better than if I set the query state in searchBooks...
-    this.setState({
-      query: query.trim()
-    })
 
-    if (query) {
-      this.searchBooks(query)
+    const trimmed = query.trim()
+    //found out this works a lot better than if I set the query state in searchBooks...
+    
+    // this.setState({
+    //   query: query.trim()
+    // })
+
+    if (trimmed) {
+      this.setState({
+        query: query.trim()
+      })
+      this.searchBooks(trimmed)
     } else {
       this.setState({results: []})
+      // clear result and show friendly message to the user
     }
   }
 
   searchBooks = (query) => {
+    /* Books that are coming from BooksAPI.search do not have a .shelf property, even if they are in one of your shelves! 
+    You need to assign each book a shelf value, you can do this by checking the response with your current books in shelves. */
     BooksAPI.search(query).then((response) => {
       console.log(response)
       if(response && response.error === "empty query"){
@@ -69,11 +77,17 @@ class SearchBooks extends Component {
       } else {
         //TODO: Check to see if the current results contain any books that are already on the shelf.
         //If so, remove them from the search results
-        response.map((searchBook) => (
-          this.props.books.map((currBook) => (
-            searchBook.id === currBook.id
-          ))
+        const newBooks = response.map((searchBook) => (
+          this.props.books.map((currBook) => {
+            if(searchBook.id !== currBook.id) {
+              searchBook.shelf = 'none'
+            } else {
+              searchBook.shelf = currBook.shelf
+            }
+          })
         ))
+
+        console.log(newBooks)
 
         this.setState({
           results: response

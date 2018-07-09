@@ -2,22 +2,21 @@ import React, { Component } from 'react'
 import {Link} from 'react-router-dom'
 
 
-class Shelf extends Component {
-//I don't need state here. Probably
+const Shelf = (props) => {
+//I don't need state here. Probably change to stateless
 
-  handleChange = (book, shelf) => {
+  const handleChange = (book, shelf) => {
     //We don't want to call the parent function if the same shelf or none is clicked
-    if (book.shelf !== shelf && shelf !== 'none') {
-      this.props.handleChange(book, shelf)
+    if (book.shelf !== shelf) {
+      props.handleChange(book, shelf)
     } else {
-      console.log("Same shelf or none has been chosen")
+      console.log("Same shelf has been chosen")
     }
   }
 
   // let books = ''
-  render() {
     //let shelf = this.props.shelf
-    let books = this.props.books.filter((book) => book.shelf === this.props.shelf)
+    let books = props.books.filter((book) => book.shelf === props.shelf)
     //let selectedValue = this.props.selectedValue
     //console.log(this.props.shelf)
 
@@ -33,8 +32,8 @@ class Shelf extends Component {
                     backgroundImage: 'url(' + book.imageLinks.thumbnail + ')'}}></div>
                 <div className="book-shelf-changer">
                   <select
-                      value={this.props.shelf}
-                      onChange={(event) => this.handleChange(book, event.target.value)}>
+                      value={props.shelf}
+                      onChange={(event) => handleChange(book, event.target.value)}>
                     <option value="move">Move to...</option>
                     <option value="currentlyReading">Currently Reading</option>
                     <option value="wantToRead">Want to Read</option>
@@ -52,7 +51,7 @@ class Shelf extends Component {
       </div>
     )
   }
-}
+
 
 class BookShelf extends Component {
 
