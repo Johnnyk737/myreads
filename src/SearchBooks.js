@@ -10,6 +10,14 @@ class SearchBooks extends Component {
     results: []
   }
 
+  setInitialState = () => {
+    console.log('resetting state')
+    this.setState(() => ({
+      query: '',
+      results: []
+    }))
+  }
+
   renderResults = (queryResults) => (
     queryResults.map((book) => (
       <li key={book.id}>
@@ -30,7 +38,7 @@ class SearchBooks extends Component {
             }
             <div className="book-shelf-changer">
               <select
-                value={book.shelf}
+                value={book.shelf ? book.shelf : 'none'}
                 onChange={(event) => this.props.onChangeShelf(book, event.target.value)}>
                 <option value="move">Move to...</option>
                 <option value="currentlyReading">Currently Reading</option>
@@ -50,15 +58,11 @@ class SearchBooks extends Component {
   updateQuery = (query) => {
 
     const trimmed = query.trim()
-    //found out this works a lot better than if I set the query state in searchBooks...
-    
-    // this.setState({
-    //   query: query.trim()
-    // })
+    // found out this works a lot better than if I set the query state in searchBooks...
 
     if (trimmed) {
       this.setState({
-        query: query.trim()
+        query: trimmed
       })
       this.searchBooks(trimmed)
     } else {
@@ -68,26 +72,18 @@ class SearchBooks extends Component {
   }
 
   searchBooks = (query) => {
+    console.log(query)
     /* Books that are coming from BooksAPI.search do not have a .shelf property, even if they are in one of your shelves! 
     You need to assign each book a shelf value, you can do this by checking the response with your current books in shelves. */
     BooksAPI.search(query).then((response) => {
-      console.log(response)
       if(response && response.error === "empty query"){
         this.setState({results: []});
       } else {
-        //TODO: Check to see if the current results contain any books that are already on the shelf.
-        //If so, remove them from the search results
-        const newBooks = response.map((searchBook) => (
-          this.props.books.map((currBook) => {
-            if(searchBook.id !== currBook.id) {
-              searchBook.shelf = 'none'
-            } else {
-              searchBook.shelf = currBook.shelf
-            }
-          })
+        response.map((searchBook) => (
+          this.props.books.map((currBook) => (
+            currBook.id === searchBook.id && (searchBook.shelf = currBook.shelf)
+          ))
         ))
-
-        console.log(newBooks)
 
         this.setState({
           results: response
@@ -99,10 +95,11 @@ class SearchBooks extends Component {
     })
   }
 
-  render() {
-    const { query } = this.state
 
-    let queryResults = this.state.results
+  render() {
+    const { results } = this.state
+
+    //let queryResults = this.state.results
 
     // if (query) {
     //   const match = new RegExp(escapeRegExp(query), 'i')
@@ -111,7 +108,7 @@ class SearchBooks extends Component {
     //   queryResults = results
     // }
 
-    queryResults.sort(sortBy('title'))
+    results.sort(sortBy('title'))
 
 
     return (
@@ -120,21 +117,25 @@ class SearchBooks extends Component {
           <Link 
             to='/'
             className="close-search" 
+            onClick={this.setInitialState}
           >Close</Link>
           <div className="search-books-input-wrapper">
             <input 
-            type="text" 
-            placeholder="Search by title or author"
-            value={query}
-            onChange={event => this.updateQuery(event.target.value)}
+              id="searchBar"
+              type="text" 
+              placeholder="Search by title or author"
+              // value={query}
+              //I had to comment this out because it wasn't letting me clear out the query 
+              //or allow spaces... I'm not sure I understand why
+              onChange={event => this.updateQuery(event.target.value)}
             />
 
           </div>
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
-            {queryResults.length > 0 && this.renderResults(queryResults)}
-            {queryResults.length === 0 && (
+            {results.length > 0 && this.renderResults(results)}
+            {results.length === 0 && (
               <div>No Results Returned</div>
             )}
           </ol>

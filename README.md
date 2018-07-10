@@ -1,15 +1,20 @@
 # MyReads Project
 
-This is the starter template for the final assessment project for Udacity's React Fundamentals course. The goal of this template is to save you time by providing a static example of the CSS and HTML markup that may be used, but without any of the React code that is needed to complete the project. If you choose to start with this template, your job will be to add interactivity to the app by refactoring the static code in this template.
+This React-designed webapp allows you to see the books you are currently reading, the books you want to read, and the books you have read.  You can also search for more books and add them to any of the 3 sections.  If you would like to remove a book from the list entirely, there is an option to select 'none'.
 
-Of course, you are free to start this project from scratch if you wish! Just be sure to use [Create React App](https://github.com/facebookincubator/create-react-app) to bootstrap the project.
-
-## TL;DR
-
-To get started developing right away:
+## To get started right away:
 
 * install all project dependencies with `npm install`
 * start the development server with `npm start`
+
+## Dependencies
+
+ - react (v16.4.1)
+ - react-dom (v16.4.1)
+ - react-router-dom (v4.3.1)
+ - react-scripts (v1.1.4)
+ - react-select (v1.2.1)
+ - sort-by (v1.2.0)
 
 ## What You're Getting
 ```bash
@@ -81,10 +86,6 @@ search(query)
 ## Important
 The backend API uses a fixed set of cached search results and is limited to a particular set of search terms, which can be found in [SEARCH_TERMS.md](SEARCH_TERMS.md). That list of terms are the _only_ terms that will work with the backend, so don't be surprised if your searches for Basket Weaving or Bubble Wrap don't come back with any results.
 
-## Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). You can find more information on how to perform common tasks [here](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md).
-
 
 ## Requirements
 
@@ -94,3 +95,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 - When a book is on a bookshelf, it should have the same state on both the main application page and the search page.
 - The search page also has a link to / (the root URL), which leads back to the main page.
 - When you navigate back to the main page from the search page, you should instantly see all of the selections you made on the search page in your library.
+
+## Future Development
+
+ - Add a details pop-up, so if you click on a specific book, it will show a pop-up with the details of the book.
